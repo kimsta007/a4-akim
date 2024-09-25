@@ -7,7 +7,7 @@ const cookie = cookieSession,
       { MongoClient, ObjectId } = mongodb;
 const app = express();
 
-const uri = `mongodb+srv://smoliner:CS2024End@cluster0.yjbwv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+const uri = `mongodb+srv://<user>:<pass>@cluster0.yjbwv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 const client = new MongoClient( uri )
 
 let collection = null
