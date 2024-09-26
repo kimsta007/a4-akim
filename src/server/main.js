@@ -2,6 +2,8 @@ import express from "express";
 import ViteExpress from "vite-express";
 import cookieSession from "cookie-session";
 import mongodb from "mongodb"
+import session from 'express-session';
+
 
 const cookie = cookieSession,
       { MongoClient, ObjectId } = mongodb;
@@ -12,13 +14,20 @@ const client = new MongoClient( uri )
 
 let collection = null
 
+app.use(session({
+  secret: 'your-secret-key', // Replace with a strong secret
+  resave: false,
+  saveUninitialized: true,
+}));
+
+
 app.use(express.json())
 app.use(express.urlencoded({extended: true }));
 
-app.use( cookie({
-  name: 'session',
-  keys: ['key1', 'key2']
-}))
+// app.use( cookie({
+//   name: 'session',
+//   keys: ['key1', 'key2']
+// }))
 
 async function run() {
   await client.connect()
@@ -27,6 +36,9 @@ async function run() {
 }
 
 app.post("/login", (req, res) => {
+  console.log(req.body)
+
+  req.session.username = "testuser"
   if (true) {
     return res.json({ success: true, redirectUrl: "/home" });
   } 
@@ -38,6 +50,12 @@ app.get("/docs", async (req, res) => {
     console.log(docs)
     res.json( docs )
   }
+})
+
+app.post("/getuser", async (req, res) => {
+  console.log("GETUSER")
+  console.log(req.session)
+  res.json({ username: req.session.username });
 })
 
 app.post( '/submit', async (request,response) => {
